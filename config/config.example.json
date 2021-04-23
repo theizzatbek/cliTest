@@ -1,0 +1,26 @@
+{
+  "application": "Buy-event",
+  "description": "CLI application for send notification",
+  "version": "v1.0.0",
+  "dev_mode": true,
+  "postgres": {
+    "host"     : "localhost",
+    "port"     : 5432,
+    "user"     : "user",
+    "password" : "password",
+    "dbname"   : "db"
+  },
+  "nexmo": {
+    "key": "key",
+    "secret": "secret"
+  },
+  "email": {
+    "user"     : "user@mail.ru",
+    "password"  : "password",
+    "host"      : "smtp.gmail.com",
+    "port"      : 587
+  },
+  "sentry": {
+    "dsn": "dsn"
+  }
+}

@@ -2,35 +2,21 @@ package cmd
 
 import (
 	"bytes"
+	"cliTest/config"
 	"encoding/base64"
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/smtp"
 	"strings"
 	"time"
 )
 
-type server struct {
-	Host     string
-	Port     string
-	User     string
-	Password string
-}
-
-func (s *server) Address() string {
-	return s.Host + ":" + s.Port
+func address(host string, port int) string {
+	return fmt.Sprintf("%s:%d", host, port)
 }
 
 func Send(receiver, msg string) error {
 
-	file, _ := ioutil.ReadFile("./conf/email.json")
-
-	server := server{}
-
-	_ = json.Unmarshal(file, &server)
-
-	//fmt.Println(server)
+	server := config.GetInstance().Email
 	from := server.User
 	password := server.Password
 	to := []string{
@@ -52,7 +38,9 @@ func Send(receiver, msg string) error {
 
 	auth := smtp.PlainAuth("", from, password, server.Host)
 
-	err := smtp.SendMail(server.Address(), auth, from, to, buf.Bytes())
+	err := smtp.SendMail(
+		address(server.Host, server.Port),
+		auth, from, to, buf.Bytes())
 	if err != nil {
 		return err
 	}

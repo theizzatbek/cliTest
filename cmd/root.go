@@ -16,35 +16,37 @@ limitations under the License.
 package cmd
 
 import (
+	"cliTest/config"
+	"cliTest/events"
+	sentryService "cliTest/services/sentry"
 	"github.com/spf13/cobra"
 )
 
 var (
-	userId, productId int
-	sendType          string
+	ProductId     int
+	UserId        int
+	configuration config.Config
 )
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:     "cli-test <send_type>",
-	Short:   "CLI application for send notification",
-	Run:     actions,
+	Use:     "buy_event <send_type>",
+	Short:   configuration.Description,
+	Run:     events.Actions,
 	Args:    cobra.MinimumNArgs(1),
-	Version: "v1.0.0",
+	Version: configuration.Version,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
+	configuration = *config.GetInstance()
+	sentryService.SentryService.Init()
 	cobra.CheckErr(rootCmd.Execute())
 }
 
 func init() {
-	rootCmd.Flags().IntVarP(&userId, "user_id", "u", userId, "User id")
-	rootCmd.Flags().IntVarP(&productId, "product_id", "p", productId, "Product id")
-
-	//viper.BindPFlag("user_id", rootCmd.PersistentFlags().Lookup("user_id"))
-	//viper.BindPFlag("product_id", rootCmd.PersistentFlags().Lookup("product_id"))
-	//rootCmd.Flags().StringP("send_type", "s", sendType, "Send type")
+	rootCmd.Flags().IntVarP(&UserId, "user_id", "u", UserId, "User id")
+	rootCmd.Flags().IntVarP(&ProductId, "product_id", "p", ProductId, "Product id")
 
 }

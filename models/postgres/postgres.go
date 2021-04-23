@@ -1,30 +1,18 @@
-package models
+package postgres
 
 import (
-	"encoding/json"
+	"cliTest/config"
+	"cliTest/models"
 	"fmt"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
-	"io/ioutil"
 )
-
-type postgres struct {
-	Host     string
-	Port     int
-	User     string
-	Password string
-	Dbname   string
-}
 
 var db *gorm.DB
 
 func init() {
 
-	file, _ := ioutil.ReadFile("./conf/db.json")
-
-	pg := postgres{}
-
-	_ = json.Unmarshal(file, &pg)
+	pg := config.GetInstance().Postgres
 
 	dbUri := fmt.Sprintf("postgres://%s:%s@%s/%s?sslmode=disable", pg.User, pg.Password, pg.Host, pg.Dbname)
 
@@ -34,10 +22,10 @@ func init() {
 	}
 
 	db = conn
-	db.Debug().AutoMigrate(&User{}, &Product{})
+	db.Debug().AutoMigrate(&models.User{}, &models.Product{})
 
 }
 
-func getDB() *gorm.DB {
+func GetDB() *gorm.DB {
 	return db
 }

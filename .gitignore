@@ -2,5 +2,5 @@
 /app1.log
 /cliTest.exe
 /LICENSE
-/conf/
+/conf/config.json
 /.idea/

@@ -2,8 +2,8 @@ package cmd
 
 import (
 	"bytes"
+	"cliTest/config"
 	"encoding/json"
-	"io/ioutil"
 	"net/http"
 )
 
@@ -15,24 +15,15 @@ type SMSRequestBody struct {
 	APISecret string `json:"api_secret"`
 }
 
-type sms struct {
-	Key    string
-	Secret string
-}
-
 func Send(phoneNumber, msg string) error {
 
-	file, _ := ioutil.ReadFile("./conf/sms.json")
-
-	sms := sms{}
-
-	_ = json.Unmarshal(file, &sms)
+	sms := config.GetInstance().Nexmo
 
 	body := SMSRequestBody{
 		APIKey:    sms.Key,
 		APISecret: sms.Secret,
-		To:        phoneNumber + "123",
-		From:      "Test app",
+		To:        phoneNumber,
+		From:      config.GetInstance().Application,
 		Text:      msg,
 	}
 
@@ -46,7 +37,9 @@ func Send(phoneNumber, msg string) error {
 		return err
 	}
 
-	defer resp.Body.Close()
+	defer func() {
+		_ = resp.Body.Close()
+	}()
 
 	return nil
 }

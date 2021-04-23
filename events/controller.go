@@ -1,9 +1,10 @@
-package cmd
+package events
 
 import (
+	cmd2 "cliTest/cmd"
 	"cliTest/models"
-	email "cliTest/service/email"
-	sms "cliTest/service/sms"
+	email "cliTest/services/email"
+	sms "cliTest/services/sms"
 	"cliTest/utils/log"
 	"fmt"
 	"github.com/pkg/errors"
@@ -11,9 +12,9 @@ import (
 	"os"
 )
 
-func actions(cmd *cobra.Command, args []string) {
+func Actions(_ *cobra.Command, args []string) {
 
-	if userId < 1 || productId < 1 {
+	if cmd2.UserId < 1 || cmd2.ProductId < 1 {
 		log.Error(errors.New("user id or product id is not supported"))
 		os.Exit(1)
 	}
@@ -32,17 +33,16 @@ func get() (models.User, string) {
 
 	defer func() {
 		if err != nil {
-
 			log.Error(err)
 			os.Exit(1)
 		}
 	}()
 
-	user := models.User{ID: userId}
+	user := models.User{ID: cmd2.UserId}
 	if err = user.GetById(); err != nil {
 		return models.User{}, ""
 	}
-	product := models.Product{ID: productId}
+	product := models.Product{ID: cmd2.ProductId}
 	if err = product.GetById(); err != nil {
 		return models.User{}, ""
 	}

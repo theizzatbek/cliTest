@@ -1,6 +1,7 @@
 package log
 
 import (
+	sentryService "cliTest/services/sentry"
 	"fmt"
 	"github.com/pkg/errors"
 	"os"
@@ -13,11 +14,11 @@ func Info(desc string) {
 	fmt.Println(desc)
 }
 
-func Error(err error, args ...interface{}) {
+func Error(err error) {
 
-	fmt.Sprintf("[ERROR] %v", err)
-	//fmt.Println("ERR:", err.Error())
-	logToFile(err, args...)
+	fmt.Printf("[ERROR] %v", err)
+	sentryService.SentryService.Error(nil, "", err)
+	logToFile(err)
 	//logrus.SetOutput(f)
 	//logrus.WithFields(logrus.Fields{
 	//	"desc": desc,
@@ -26,12 +27,17 @@ func Error(err error, args ...interface{}) {
 }
 
 func init() {
-	file, _ = os.OpenFile("app.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	if _, err := os.Stat("log"); os.IsNotExist(err) {
+		panic(os.Mkdir("log", os.ModePerm))
+	}
+	file, _ = os.OpenFile(fmt.Sprintf("log/%s.log", time.Now().Month()),
+		os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 }
 
-func logToFile(err error, args ...interface{}) {
+func logToFile(err error) {
 
 	//defer f.Close()
-	fmt.Fprintf(file, "[%s]\t \n%+v\n",
+	_, _ = fmt.Fprintf(file, "[%s]\t \n%+v\n",
 		time.Now().Format(time.RFC3339), errors.Wrap(err, "[ERROR] "))
+
 }
