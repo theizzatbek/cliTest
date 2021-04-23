@@ -1,7 +1,5 @@
 package models
 
-import "cliTest/models/postgres"
-
 type User struct {
 	ID          int    `json:"ID" gorm:"primary_key"`
 	Email       string `json:"email"`
@@ -9,5 +7,5 @@ type User struct {
 }
 
 func (u *User) GetById() error {
-	return postgres.GetDB().Table("users").Where("id = ?", u.ID).First(u).Error
+	return db.Table("users").Where("id = ?", u.ID).First(u).Error
 }

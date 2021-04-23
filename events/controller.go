@@ -1,7 +1,7 @@
 package events
 
 import (
-	cmd2 "cliTest/cmd"
+	"cliTest/common/variables"
 	"cliTest/models"
 	email "cliTest/services/email"
 	sms "cliTest/services/sms"
@@ -12,9 +12,9 @@ import (
 	"os"
 )
 
-func Actions(_ *cobra.Command, args []string) {
+func Actions(cmd *cobra.Command, args []string) {
 
-	if cmd2.UserId < 1 || cmd2.ProductId < 1 {
+	if variables.UserId < 1 || variables.ProductId < 1 {
 		log.Error(errors.New("user id or product id is not supported"))
 		os.Exit(1)
 	}
@@ -38,11 +38,11 @@ func get() (models.User, string) {
 		}
 	}()
 
-	user := models.User{ID: cmd2.UserId}
+	user := models.User{ID: variables.UserId}
 	if err = user.GetById(); err != nil {
 		return models.User{}, ""
 	}
-	product := models.Product{ID: cmd2.ProductId}
+	product := models.Product{ID: variables.ProductId}
 	if err = product.GetById(); err != nil {
 		return models.User{}, ""
 	}

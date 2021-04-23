@@ -28,7 +28,9 @@ func Error(err error) {
 
 func init() {
 	if _, err := os.Stat("log"); os.IsNotExist(err) {
-		panic(os.Mkdir("log", os.ModePerm))
+		if err := os.Mkdir("log", os.ModePerm); err != nil {
+			panic(err)
+		}
 	}
 	file, _ = os.OpenFile(fmt.Sprintf("log/%s.log", time.Now().Month()),
 		os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)

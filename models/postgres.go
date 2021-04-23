@@ -1,8 +1,7 @@
-package postgres
+package models
 
 import (
 	"cliTest/config"
-	"cliTest/models"
 	"fmt"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
@@ -22,10 +21,9 @@ func init() {
 	}
 
 	db = conn
-	db.Debug().AutoMigrate(&models.User{}, &models.Product{})
+	db.AutoMigrate(
+		&Product{},
+		&User{},
+	)
 
-}
-
-func GetDB() *gorm.DB {
-	return db
 }

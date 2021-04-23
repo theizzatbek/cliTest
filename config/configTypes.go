@@ -45,7 +45,8 @@ func GetInstance() *Config {
 	once.Do(func() {
 		file, _ := ioutil.ReadFile("./config/config.json")
 		var config *Config
-		_ = json.Unmarshal(file, config)
+		_ = json.Unmarshal(file, &config)
+
 		instance = config
 	})
 

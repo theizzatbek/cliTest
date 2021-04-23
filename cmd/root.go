@@ -16,17 +16,14 @@ limitations under the License.
 package cmd
 
 import (
+	"cliTest/common/variables"
 	"cliTest/config"
 	"cliTest/events"
 	sentryService "cliTest/services/sentry"
 	"github.com/spf13/cobra"
 )
 
-var (
-	ProductId     int
-	UserId        int
-	configuration config.Config
-)
+var configuration = config.GetInstance()
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -40,13 +37,13 @@ var rootCmd = &cobra.Command{
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
-	configuration = *config.GetInstance()
+
 	sentryService.SentryService.Init()
 	cobra.CheckErr(rootCmd.Execute())
 }
 
 func init() {
-	rootCmd.Flags().IntVarP(&UserId, "user_id", "u", UserId, "User id")
-	rootCmd.Flags().IntVarP(&ProductId, "product_id", "p", ProductId, "Product id")
+	rootCmd.Flags().IntVarP(&variables.UserId, "user_id", "u", variables.UserId, "User id")
+	rootCmd.Flags().IntVarP(&variables.ProductId, "product_id", "p", variables.ProductId, "Product id")
 
 }
